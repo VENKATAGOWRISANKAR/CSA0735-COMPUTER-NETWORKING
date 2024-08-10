@@ -5,8 +5,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define DNS_SERVER "8.8.8.8"  // Example DNS server (Google DNS)
-#define DNS_PORT 53           // DNS server port
+#define DNS_SERVER "8.8.8.8"  
+#define DNS_PORT 53          
 
 // DNS header structure
 struct DNSHeader {
@@ -18,18 +18,17 @@ struct DNSHeader {
     unsigned short arcount;
 };
 
-// DNS question structure
+
 struct DNSQuestion {
     unsigned short qtype;
     unsigned short qclass;
 };
 
-// Function to create a DNS query packet
+
 void create_dns_query_packet(char *hostname, unsigned char *buf) {
     struct DNSHeader *dns = (struct DNSHeader *)buf;
     struct DNSQuestion *qinfo = (struct DNSQuestion *)(buf + sizeof(struct DNSHeader));
     
-    // Set DNS header
     dns->id = htons(getpid());
     dns->flags = htons(0x0100);  // Standard query
     dns->qdcount = htons(1);
@@ -37,11 +36,9 @@ void create_dns_query_packet(char *hostname, unsigned char *buf) {
     dns->nscount = 0;
     dns->arcount = 0;
     
-    // Set DNS question
     qinfo->qtype = htons(1);  // Type A (IPv4 address)
     qinfo->qclass = htons(1); // Class IN (Internet)
     
-    // Convert hostname to DNS format
     char *token;
     int index = sizeof(struct DNSHeader) + sizeof(struct DNSQuestion);
     token = strtok(hostname, ".");
